@@ -1,9 +1,35 @@
 const http = require('http');
+const https = require('https');
 const url = require('url');
+const fs = require('fs');
 const config = require('./config');
 const StringDecoder = require('string_decoder').StringDecoder;
 
-const server = http.createServer((req, res) => {
+const httpServer = http.createServer((req, res) => {
+    unifiedServer(req, res); 
+});
+
+// instanciate the http server
+httpServer.listen(config.httpPort, _=> {
+    console.log(`server is up on port ${config.httpPort} in ${config.envName} mode`);
+});
+
+//instanciate https server
+const httpsServerOptions = {
+    'key': fs.readFileSync('./https/key.pem'),
+    'cert': fs.readFileSync('./https/cert.pem')
+};
+const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
+    unifiedServer(req, res); 
+});
+
+//start the https server
+httpsServer.listen(config.httpPort, _=> {
+    console.log(`server is up on port ${config.httpsPort} in ${config.envName} mode`);
+});
+
+// unified server logic http ad https
+const unifiedServer = function(req,res) {
     // getting url and parsing it
     const parsedUrl = url.parse(req.url, true);
 
@@ -63,20 +89,15 @@ const server = http.createServer((req, res) => {
             console.log('Returning this response', statusCode, payloadString);            
         }); 
     });
-});
-
-// starting server and have it listen to 3000
-server.listen(config.port, _=> {
-    console.log(`server is up on port ${config.port} in ${config.envName} mode`);
-});
+};
 
 // define handlers
 const handlers = {};
 
 // sample handler
-handlers.sample = function(data, cb) {
+handlers.ping = function(data, cb) {
     // call a http status code and a payload object
-    cb(406, { name: 'my name is sample handler' });
+    cb(200);
 }
 
 //not found handler
@@ -86,5 +107,5 @@ handlers.notFound = function(data, cb) {
 
 // defining a request router
 const router = {
-    'sample': handlers.sample
+    'ping': handlers.ping
 }
