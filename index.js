@@ -3,14 +3,21 @@ const https = require('https');
 const url = require('url');
 const fs = require('fs');
 const config = require('./config');
+const _data = require('./lib/data');
 const StringDecoder = require('string_decoder').StringDecoder;
+
+// TEST
+_data.delete('test', 'newFile', function(err, data) {
+    console.log(err, data);
+});
 
 const httpServer = http.createServer((req, res) => {
     unifiedServer(req, res); 
 });
 
 // instanciate the http server
-httpServer.listen(config.httpPort, _=> {
+// TODO: config port problem
+httpServer.listen(3000, _=> {
     console.log(`server is up on port ${config.httpPort} in ${config.envName} mode`);
 });
 

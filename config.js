@@ -3,8 +3,8 @@ const enviroments = {};
 
 // staging (default) object
 enviroments.staging = {
-    'httpPort': 4000,
-    'httpsPort': 4001,
+    'httpPort': 5003,
+    'httpsPort': 5004,
     'envName': 'staging'
 };
 
