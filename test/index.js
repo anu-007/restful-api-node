@@ -7,30 +7,10 @@ const assert = require('assert');
 _app = {};
 
 //container for the test
-_app.tests = {
-    'unit': {}
-};
+_app.tests = {};
 
-//assert that getANumber function return a number
-_app.tests.unit['helpers.getANumber should return a number'] = function(done) {
-    const val = helpers.getANumber();
-    assert.equal(typeof(val), 'number');
-    done();
-};
-
-//assert that getANumber function return 1
-_app.tests.unit['helpers.getANumber should return 1'] = function(done) {
-    const val = helpers.getANumber();
-    assert.equal(val, 1);
-    done();
-};
-
-//assert that getANumber function return 2
-_app.tests.unit['helpers.getANumber should return 2'] = function(done) {
-    const val = helpers.getANumber();
-    assert.equal(val, 2);
-    done();
-};
+//addon the unit test
+_app.tests.unit = require('./unit');
 
 //count all the tests
 _app.countTests = function() {
@@ -70,7 +50,7 @@ _app.runTests = function() {
                                 counter++;
                                 successes++;
                                 if(counter == limit) {
-                                    _app.produceTestReport(limit, successes, errorss);
+                                    _app.produceTestReport(limit, successes, errors);
                                 }
                             });
                         } catch(e) {
